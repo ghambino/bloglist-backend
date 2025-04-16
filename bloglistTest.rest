@@ -1,0 +1,12 @@
+POST http://localhost:3003/api/blogs
+Content-Type: application/json
+
+{
+    "author": "abdulwahab abbas",
+    "title": "The progressive growth of generative AI",
+    "url": "www.welcometohome.com",
+    "likes": 5
+}
+
+########
+GET http://localhost:3003/api/blogs
