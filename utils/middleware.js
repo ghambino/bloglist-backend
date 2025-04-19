@@ -12,7 +12,7 @@ const exceptionHandler = (error, request, response, next) => {
         })
     } 
 
-    if(error.name === "MongoError"){
+    if(error.name === "MongoServerError"){
         if(error.code === 11000){
             return response.status(409).json({
                 error: "Duplicate key error"

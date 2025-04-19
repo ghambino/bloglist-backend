@@ -4,7 +4,9 @@ const cors = require('cors');
 //relative imports
 const { MONGODB_URI } = require('./utils/config.js');
 const { exceptionHandler, unknownEndpoint } = require('./utils/middleware.js');
-const bloglistRouter = require("./controllers/bloglist.js")
+const bloglistRouter = require("./controllers/bloglist.js");
+const userRouter = require("./controllers/user.js")
+
 
 
 const app = express();
@@ -22,7 +24,9 @@ app.use(express.json());
 app.use(cors())
 
 //route-handler middlewares
+app.use('/api/users', userRouter);
 app.use('/api/blogs', bloglistRouter)
+
 
 app.use(unknownEndpoint);
 app.use(exceptionHandler)
