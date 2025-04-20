@@ -3,11 +3,10 @@ const mongoose = require('mongoose');
 const cors = require('cors');
 //relative imports
 const { MONGODB_URI } = require('./utils/config.js');
-const { exceptionHandler, unknownEndpoint } = require('./utils/middleware.js');
+const { exceptionHandler, unknownEndpoint, tokenExtractor } = require('./utils/middleware.js');
 const bloglistRouter = require("./controllers/bloglist.js");
-const userRouter = require("./controllers/user.js")
-
-
+const userRouter = require("./controllers/user.js");
+const loginRouter = require('./controllers/loginAuth.js')
 
 const app = express();
 
@@ -22,12 +21,14 @@ mongoose.connect(MONGODB_URI).then(() => {
 //use appropriate middleware for intercepting request and response
 app.use(express.json());
 app.use(cors())
+app.use(tokenExtractor);
 
 //route-handler middlewares
 app.use('/api/users', userRouter);
-app.use('/api/blogs', bloglistRouter)
+app.use('/api/login', loginRouter);
+app.use('/api/blogs', bloglistRouter);
 
-
+//remaining middleware handlers
 app.use(unknownEndpoint);
 app.use(exceptionHandler)
 
