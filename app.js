@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 const cors = require('cors');
 //relative imports
 const { MONGODB_URI } = require('./utils/config.js');
-const { exceptionHandler, unknownEndpoint, tokenExtractor } = require('./utils/middleware.js');
+const { exceptionHandler, unknownEndpoint, tokenExtractor,  userExtractor } = require('./utils/middleware.js');
 const bloglistRouter = require("./controllers/bloglist.js");
 const userRouter = require("./controllers/user.js");
 const loginRouter = require('./controllers/loginAuth.js')
@@ -22,11 +22,16 @@ mongoose.connect(MONGODB_URI).then(() => {
 app.use(express.json());
 app.use(cors())
 app.use(tokenExtractor);
+// app.use(userExtractor);
 
-//route-handler middlewares
+//route-handler middlewares`
+app.use('/home', (request, response, next) => {
+    console.log('hello abbas');
+    response.send('welcome to my page and test environment')
+});
 app.use('/api/users', userRouter);
 app.use('/api/login', loginRouter);
-app.use('/api/blogs', bloglistRouter);
+app.use('/api/blogs', userExtractor, bloglistRouter);
 
 //remaining middleware handlers
 app.use(unknownEndpoint);

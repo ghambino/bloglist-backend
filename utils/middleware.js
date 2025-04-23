@@ -1,3 +1,6 @@
+const jwt = require('jsonwebtoken');
+const appConfig = require('../utils/config.js');
+const  User = require('../models/user.js');
 //error categories...schema and database related error, network errors, server error, 
 const exceptionHandler = (error, request, response, next) => {
     console.error(error)
@@ -65,6 +68,25 @@ const tokenExtractor = (request, response, next) => {
     next()
 }
 
+const userExtractor = async(request, response, next) => {
+    const authToken = request.token;
+    const decodedToken = jwt.verify(request.token, appConfig.SECRET);
+
+    if(authToken && decodedToken.id){
+        const currentUser = await User.findById(decodedToken.id);
+        request.user = {
+            username: currentUser.username,
+            id: currentUser.id
+        };
+    }else {
+        request.user = null;
+    }
+    next()
+}
+
 module.exports = { 
-    exceptionHandler, unknownEndpoint, tokenExtractor
+    exceptionHandler, 
+    unknownEndpoint, 
+    tokenExtractor,
+    userExtractor
 }
